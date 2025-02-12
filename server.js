@@ -12,11 +12,22 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Koneksi ke PostgreSQL
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    port: process.env.DB_PORT
+const { Sequelize } = require("sequelize");
+require("dotenv").config(); // Load .env file
+
+const sequelize = new Sequelize(process.env.postgresql://postgres:postgresql12@db.kqhmtkldfzhrviprxdaq.supabase.co:5432/postgres, {
+  dialect: "postgres",
+  dialectModule: require("pg"),
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // Supabase membutuhkan ini
+    },
+  },
+  logging: false, // Opsional
 });
+
+module.exports = sequelize;
 
 // Definisi Model Order
 const Order = sequelize.define('Order', {
